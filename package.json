@@ -1,6 +1,6 @@
 {
   "name": "@rljson/cars-bff-runtime",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Backend for frontend of the cars example app: serves the API of the browser",
   "homepage": "https://github.com/rljson/cars-bff-runtime",
   "bugs": "https://github.com/rljson/cars-bff-runtime/issues",

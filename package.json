@@ -4,7 +4,7 @@
   "description": "Backend for frontend of the cars example app: serves the API of the browser",
   "homepage": "https://github.com/rljson/cars-bff-runtime",
   "bugs": "https://github.com/rljson/cars-bff-runtime/issues",
-  "private": false,
+  "private": true,
   "license": "MIT",
   "engines": {
     "node": ">=22.14.0"

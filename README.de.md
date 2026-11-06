@@ -11,7 +11,6 @@ found in the LICENSE file in the root of this package.
 [English](README.md) | Deutsch
 
 [![CI](https://github.com/rljson/cars-bff-runtime/actions/workflows/quick_check.yaml/badge.svg)](https://github.com/rljson/cars-bff-runtime/actions/workflows/quick_check.yaml)
-[![npm](https://img.shields.io/npm/v/@rljson/cars-bff-runtime.svg)](https://www.npmjs.com/package/@rljson/cars-bff-runtime)
 
 Backend for Frontend der cars-Beispiel-App: bedient die API des Browsers.
 
@@ -23,8 +22,11 @@ Backend for Frontend der cars-Beispiel-App: bedient die API des Browsers.
 
 ## Installation
 
+Das Paket ist privat und wird nicht auf npm veröffentlicht. Abhängig
+macht man sich von einer getaggten Version seines Git-Repos:
+
 ```bash
-pnpm add @rljson/cars-bff-runtime
+pnpm add git+ssh://git@github.com/rljson/cars-bff-runtime.git#semver:^0.0.1
 ```
 
 ## Verwendung

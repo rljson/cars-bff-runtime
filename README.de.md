@@ -17,8 +17,9 @@ Backend for Frontend der cars-Beispiel-App: bedient die API des Browsers.
 ## Motivation
 
 - Der Browser spricht nur mit einem Backend, das sammelt, was die Domänen antworten
-- Es läuft als Container `cars-server` und bindet die Runtimes der Domänen als Pakete ein
-- Vorerst beantwortet es das Hello World: seine eigene Zeile und die weiterer Quellen
+- Es läuft als Container `cars-bff` und fragt die Server der Domänen über HTTP
+- Vorerst beantwortet es das Hello World: seine eigene Zeile, dann die von
+  cars-master-runtime unter `MASTER_URL` (Standard `http://cars-master:3000`)
 
 ## Installation
 
@@ -34,7 +35,7 @@ pnpm add git+ssh://git@github.com/rljson/cars-bff-runtime.git#semver:^0.0.1
 ```ts
 import { start } from '@rljson/cars-bff-runtime';
 
-await start({ PORT: '3000' }, [() => 'Hello from a source']);
+await start({ PORT: '3000' }, [async () => ['Hello from a source']]);
 ```
 
 Gibt aus:
@@ -45,10 +46,10 @@ cars-bff-runtime listens on port 3000
 
 ## Container
 
-Den Container `cars-server` in der Registry bauen:
+Den Container `cars-bff` in der Registry bauen:
 
 ```bash
-az acr build --registry crcarsdemo --image cars-server:<version>-<sha> .
+az acr build --registry crcarsdemo --image cars-bff:<version>-<sha> .
 ```
 
 ## Grenzen

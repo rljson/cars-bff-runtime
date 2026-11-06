@@ -15,7 +15,7 @@ describe('example', () => {
     const logMessages: string[] = [];
     const log = console.log;
     console.log = (message: string) => logMessages.push(message);
-    example();
+    await example();
     console.log = log;
 
     await expectGolden('example.log').toBe(logMessages.join('\n'));

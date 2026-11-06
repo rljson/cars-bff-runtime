@@ -4,7 +4,7 @@
 # Use of this source code is governed by terms that can be
 # found in the LICENSE file in the root of this package.
 
-# The container cars-server: the backend for frontend on Node, as uid 1000.
+# The container cars-bff: the backend for frontend on Node, as uid 1000.
 
 FROM node:22-alpine AS build
 WORKDIR /app
@@ -16,7 +16,7 @@ RUN pnpm exec vite build && pnpm prune --prod
 
 FROM node:22-alpine
 WORKDIR /app
-ENV NODE_ENV=production PORT=3000
+ENV NODE_ENV=production PORT=3000 MASTER_URL=http://cars-master:3000
 COPY --from=build /app/package.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist

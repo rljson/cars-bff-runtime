@@ -8,7 +8,12 @@ import { Server } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { bffHello, CarsBffRuntime } from '../src/cars-bff-runtime';
+import {
+  bffHello,
+  CarsBffRuntime,
+  masterSource,
+  noMaster,
+} from '../src/cars-bff-runtime';
 
 describe('CarsBffRuntime', () => {
   let server: Server | undefined;
@@ -25,12 +30,12 @@ describe('CarsBffRuntime', () => {
   };
 
   describe('helloLines()', () => {
-    it('starts with its own line', () => {
-      expect(new CarsBffRuntime().helloLines()).toEqual([bffHello]);
+    it('starts with its own line', async () => {
+      expect(await new CarsBffRuntime().helloLines()).toEqual([bffHello]);
     });
 
-    it('adds the line of each source in order', () => {
-      expect(CarsBffRuntime.example.helloLines()).toEqual([
+    it('adds the lines of each source in order', async () => {
+      expect(await CarsBffRuntime.example.helloLines()).toEqual([
         bffHello,
         'Hello from an example source',
       ]);
@@ -69,17 +74,52 @@ describe('CarsBffRuntime', () => {
   });
 
   describe('handle()', () => {
-    it('treats a request without url as /', () => {
+    it('treats a request without url as /', async () => {
       let status = 0;
       const res = {
         writeHead: (s: number) => (status = s),
         end: () => undefined,
       };
-      new CarsBffRuntime().handle(
+      await new CarsBffRuntime().handle(
         { method: 'GET' } as never,
         res as never,
       );
       expect(status).toBe(404);
+    });
+  });
+
+  describe('masterSource()', () => {
+    const answer = (body: unknown, ok = true) =>
+      (async () => ({ ok, json: async () => body })) as never;
+
+    it('answers the lines of cars-master-runtime', async () => {
+      const urls: string[] = [];
+      const fetchFn = (async (url: string) => {
+        urls.push(url);
+        return { ok: true, json: async () => ({ lines: ['a', 'b'] }) };
+      }) as never;
+      expect(await masterSource('http://master', fetchFn)()).toEqual([
+        'a',
+        'b',
+      ]);
+      expect(urls).toEqual(['http://master/api/hello']);
+    });
+
+    it('answers noMaster on an error status', async () => {
+      expect(await masterSource('http://m', answer({}, false))()).toEqual([
+        noMaster,
+      ]);
+    });
+
+    it('answers noMaster when fetch fails', async () => {
+      const fetchFn = (async () => {
+        throw new Error('down');
+      }) as never;
+      expect(await masterSource('http://m', fetchFn)()).toEqual([noMaster]);
+    });
+
+    it('uses the global fetch by default', async () => {
+      expect(await masterSource('http://localhost:1')()).toEqual([noMaster]);
     });
   });
 });

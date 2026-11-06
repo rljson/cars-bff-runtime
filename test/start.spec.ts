@@ -8,6 +8,7 @@ import { Server } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { afterEach, describe, expect, it } from 'vitest';
 
+import { CarsMasterStub } from './setup/master-stub';
 import { defaultPort, start } from '../src/start';
 
 describe('start()', () => {
@@ -20,7 +21,10 @@ describe('start()', () => {
 
   it('listens on PORT and serves the given sources', async () => {
     const messages: string[] = [];
-    server = await start({ PORT: '0' }, [() => 'Hello from a source'], (m) =>
+    server = await start(
+      { PORT: '0' },
+      [async () => ['Hello from a source']],
+      (m) =>
       messages.push(m),
     );
     const { port } = server.address() as AddressInfo;
@@ -35,7 +39,24 @@ describe('start()', () => {
     expect((server.address() as AddressInfo).port).toBe(defaultPort);
   });
 
-  it('defaults to process.env, no sources and console.log', async () => {
+  it('asks MASTER_URL for further lines by default', async () => {
+    const master = await CarsMasterStub.start(['Hello from master']);
+    try {
+      server = await start({ PORT: '0', MASTER_URL: master.url }, undefined, () =>
+        undefined,
+      );
+      const { port } = server.address() as AddressInfo;
+      const res = await fetch(`http://localhost:${port}/api/hello`);
+      expect((await res.json()).lines).toEqual([
+        'Hello from cars-bff-runtime',
+        'Hello from master',
+      ]);
+    } finally {
+      master.close();
+    }
+  });
+
+  it('defaults to process.env, cars-master and console.log', async () => {
     const log = console.log;
     const messages: string[] = [];
     console.log = (m: string) => messages.push(m);

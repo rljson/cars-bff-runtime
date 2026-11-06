@@ -11,8 +11,34 @@ import {
   ServerResponse,
 } from 'node:http';
 
-/** A function that returns one line of the hello world */
-export type HelloSource = () => string;
+/** A function that returns further lines of the hello world */
+export type HelloSource = () => Promise<string[]>;
+
+/** The line shown when cars-master-runtime does not answer */
+export const noMaster = 'No answer from cars-master-runtime';
+
+/**
+ * Asks cars-master-runtime over HTTP for its hello lines
+ * @param masterUrl - The base url of cars-master-runtime
+ * @param fetchFn - The fetch to use
+ * @returns A hello source that answers the lines of `GET <masterUrl>/api/hello`,
+ *   or {@link noMaster} when there is no answer
+ */
+export function masterSource(
+  masterUrl: string,
+  fetchFn: typeof fetch = fetch,
+): HelloSource {
+  return async () => {
+    try {
+      const res = await fetchFn(`${masterUrl}/api/hello`);
+      if (!res.ok) return [noMaster];
+      const { lines } = (await res.json()) as { lines: string[] };
+      return lines;
+    } catch {
+      return [noMaster];
+    }
+  };
+}
 
 /** The greeting of this package */
 export const bffHello = 'Hello from cars-bff-runtime';
@@ -22,7 +48,7 @@ export const bffHello = 'Hello from cars-bff-runtime';
  * The backend for frontend: answers the API calls of the browser.
  *
  * - `GET /api/hello` answers `{ lines: string[] }`, its own line first,
- *   then the line of each hello source
+ *   then the lines of each hello source
  * - `GET /health` answers `ok`
  */
 export class CarsBffRuntime {
@@ -34,12 +60,17 @@ export class CarsBffRuntime {
 
   /** Example instance for test purposes */
   static get example(): CarsBffRuntime {
-    return new CarsBffRuntime([() => 'Hello from an example source']);
+    return new CarsBffRuntime([
+      async () => ['Hello from an example source'],
+    ]);
   }
 
   /** The lines `GET /api/hello` answers */
-  helloLines(): string[] {
-    return [bffHello, ...this._helloSources.map((source) => source())];
+  async helloLines(): Promise<string[]> {
+    const further = await Promise.all(
+      this._helloSources.map((source) => source()),
+    );
+    return [bffHello, ...further.flat()];
   }
 
   /**
@@ -47,7 +78,7 @@ export class CarsBffRuntime {
    * @param req - The incoming request
    * @param res - The response to write
    */
-  handle(req: IncomingMessage, res: ServerResponse): void {
+  async handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
     const path = (req.url ?? '/').split('?')[0];
 
     if (req.method === 'GET' && path === '/health') {
@@ -57,8 +88,9 @@ export class CarsBffRuntime {
     }
 
     if (req.method === 'GET' && path === '/api/hello') {
+      const lines = await this.helloLines();
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ lines: this.helloLines() }));
+      res.end(JSON.stringify({ lines }));
       return;
     }
 

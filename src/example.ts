@@ -6,11 +6,11 @@
 
 import { CarsBffRuntime } from './cars-bff-runtime.ts';
 
-export const example = () => {
+export const example = async () => {
   const l = console.log;
 
   l('CarsBffRuntime.example.helloLines()');
-  for (const line of CarsBffRuntime.example.helloLines()) {
+  for (const line of await CarsBffRuntime.example.helloLines()) {
     l(`  ${line}`);
   }
 };

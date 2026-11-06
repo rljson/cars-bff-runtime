@@ -1,0 +1,22 @@
+// @license
+// Copyright (c) rljson
+//
+// Use of this source code is governed by terms that can be
+// found in the LICENSE file in the root of this package.
+
+{
+  "name": "@rljson/cars-bff-runtime",
+  "summary": "Backend for frontend of the cars example app: an HTTP server with GET /api/hello (its own line, then the lines of cars-master-runtime over HTTP) and GET /health; runs as the container cars-bff.",
+  "domain": [
+    "HTTP API of the browser",
+    "container cars-bff, Node, uid 1000",
+  ],
+  "interfaces": {
+    "uses": {
+      "cars-master-runtime": "GET /api/hello over HTTP at MASTER_URL",
+    },
+    "usedBy": {
+      "cars-ui-runtime": "GET /api/hello over HTTP",
+    },
+  },
+}

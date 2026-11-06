@@ -51,8 +51,5 @@
     "vitest": "^5.0.5",
     "vitest-dom": "^0.1.1"
   },
-  "packageManager": "pnpm@10.11.0",
-  "dependencies": {
-    "@rljson/cars-master-runtime": "github:rljson/cars-master-runtime#7dc3d09"
-  }
+  "packageManager": "pnpm@10.11.0"
 }

@@ -18,8 +18,7 @@ Backend for Frontend der cars-Beispiel-App: bedient die API des Browsers.
 
 - Der Browser spricht nur mit einem Backend, das sammelt, was die Domänen antworten
 - Es läuft als Container `cars-server` und bindet die Runtimes der Domänen als Pakete ein
-- Vorerst beantwortet es das Hello World: seine eigene Zeile, dann die von
-  `@rljson/cars-master-runtime`
+- Vorerst beantwortet es das Hello World: seine eigene Zeile und die weiterer Quellen
 
 ## Installation
 
@@ -43,10 +42,6 @@ Gibt aus:
 ```text
 cars-bff-runtime listens on port 3000
 ```
-
-Ohne Quellen antwortet `start()` nach der eigenen Zeile mit der von
-`@rljson/cars-master-runtime`. Das Paket kommt aus Git, sein `prepare`-Skript
-baut es bei der Installation.
 
 ## Container
 

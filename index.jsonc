@@ -6,15 +6,13 @@
 
 {
   "name": "@rljson/cars-bff-runtime",
-  "summary": "Backend for frontend of the cars example app: an HTTP server with GET /api/hello (its own line, then the line of cars-master-runtime or of the given sources) and GET /health; runs as the container cars-server.",
+  "summary": "Backend for frontend of the cars example app: an HTTP server with GET /api/hello (its own line and those of further sources) and GET /health; runs as the container cars-server.",
   "domain": [
     "HTTP API of the browser",
     "container cars-server, Node, uid 1000",
   ],
   "interfaces": {
-    "uses": {
-      "cars-master-runtime": "hello() as the default line after its own, git dependency",
-    },
+    "uses": {},
     "usedBy": {},
   },
 }

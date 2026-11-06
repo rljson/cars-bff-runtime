@@ -35,7 +35,7 @@ describe('start()', () => {
     expect((server.address() as AddressInfo).port).toBe(defaultPort);
   });
 
-  it('defaults to process.env, no sources and console.log', async () => {
+  it('defaults to process.env, the master line and console.log', async () => {
     const log = console.log;
     const messages: string[] = [];
     console.log = (m: string) => messages.push(m);
@@ -49,5 +49,11 @@ describe('start()', () => {
       else process.env['PORT'] = before;
     }
     expect(messages).toEqual(['cars-bff-runtime listens on port 0']);
+    const { port } = server.address() as AddressInfo;
+    const res = await fetch(`http://localhost:${port}/api/hello`);
+    expect((await res.json()).lines).toEqual([
+      'Hello from cars-bff-runtime',
+      'Hello from cars-master-runtime',
+    ]);
   });
 });

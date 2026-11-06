@@ -18,7 +18,8 @@ Backend for frontend of the cars example app: serves the API of the browser.
 
 - The browser talks to one backend only, which gathers what the domains answer
 - It runs as the container `cars-server` and links the domain runtimes as packages
-- For now it answers the hello world: its own line and those of further sources
+- For now it answers the hello world: its own line, then the line of
+  `@rljson/cars-master-runtime`
 
 ## Installation
 
@@ -42,6 +43,10 @@ It prints:
 ```text
 cars-bff-runtime listens on port 3000
 ```
+
+Without sources, `start()` answers the line of `@rljson/cars-master-runtime`
+after its own. The package comes from git, so its `prepare` script builds it
+on install.
 
 ## Container
 

@@ -10,6 +10,10 @@ overrides:
 importers:
 
   .:
+    dependencies:
+      '@rljson/cars-master-runtime':
+        specifier: github:rljson/cars-master-runtime#7dc3d09
+        version: https://codeload.github.com/rljson/cars-master-runtime/tar.gz/7dc3d09
     devDependencies:
       '@rljson/dna-rljson':
         specifier: ^0.3.2
@@ -258,6 +262,11 @@ packages:
 
   '@oxc-project/types@0.156.0':
     resolution: {integrity: sha512-1Duyg48TdJNdyhEB8Xn1L36bT9Pv6GUtlKjHxOys8xkaF/rQq3XJE+bAurSK/AgIz5mGFsb77cn9Pb20+WCScw==}
+
+  '@rljson/cars-master-runtime@https://codeload.github.com/rljson/cars-master-runtime/tar.gz/7dc3d09':
+    resolution: {tarball: https://codeload.github.com/rljson/cars-master-runtime/tar.gz/7dc3d09}
+    version: 0.0.1
+    engines: {node: '>=22.14.0'}
 
   '@rljson/dna-rljson@0.3.2':
     resolution: {integrity: sha512-WYR1D9xY3QtsPlm+yvVFnbIBo6eK5+H9WbKVPu3dQnOAHM5W2ZevfHCaCtqYOsM0VeubotvgMbbFSiT4EXrAIw==}
@@ -1655,6 +1664,8 @@ snapshots:
   '@microsoft/tsdoc@0.17.1': {}
 
   '@oxc-project/types@0.156.0': {}
+
+  '@rljson/cars-master-runtime@https://codeload.github.com/rljson/cars-master-runtime/tar.gz/7dc3d09': {}
 
   '@rljson/dna-rljson@0.3.2':
     dependencies:

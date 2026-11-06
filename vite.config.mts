@@ -24,6 +24,7 @@ export default defineConfig({
       external: [
         'node:http',
         'node:net',
+        '@rljson/cars-master-runtime',
         // Add all peer depencies from package.json here
       ],
       output: {

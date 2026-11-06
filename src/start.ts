@@ -4,6 +4,7 @@
 // Use of this source code is governed by terms that can be
 // found in the LICENSE file in the root of this package.
 
+import { hello as masterHello } from '@rljson/cars-master-runtime';
 import { Server } from 'node:http';
 
 import { CarsBffRuntime, HelloSource } from './cars-bff-runtime.ts';
@@ -14,13 +15,14 @@ export const defaultPort = 3000;
 /**
  * Starts the backend for frontend as the container runs it
  * @param env - The environment; `PORT` selects the port
- * @param helloSources - Further lines of the hello world
+ * @param helloSources - Further lines of the hello world; by default the
+ *   line of `@rljson/cars-master-runtime`
  * @param log - Where the start message goes
  * @returns The listening server
  */
 export async function start(
   env: Record<string, string | undefined> = process.env,
-  helloSources: HelloSource[] = [],
+  helloSources: HelloSource[] = [masterHello],
   log: (message: string) => void = console.log,
 ): Promise<Server> {
   const port = env['PORT'] ? Number(env['PORT']) : defaultPort;

@@ -8,6 +8,7 @@ export {
   bffHello,
   CarsBffRuntime,
   masterSource,
+  masterTimeoutMs,
   noMaster,
 } from './cars-bff-runtime.ts';
 export type { HelloSource } from './cars-bff-runtime.ts';

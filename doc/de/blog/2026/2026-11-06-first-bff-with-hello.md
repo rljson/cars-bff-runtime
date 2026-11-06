@@ -46,7 +46,8 @@ found in the LICENSE file in the root of this package.
   - jede andere Anfrage antwortet 404
 - Eine Hello-Quelle ist eine asynchrone Funktion, die Zeilen liefert
 - `masterSource(url)` holt `GET <url>/api/hello` von
-  `cars-master-runtime`; ohne Antwort liefert sie
+  `cars-master-runtime`; ohne Antwort innerhalb von `masterTimeoutMs`
+  (2 Sekunden) liefert sie
   `No answer from cars-master-runtime`, damit die Seite nie bricht
 - `start()` liest `PORT` (Standard 3000) und `MASTER_URL` (Standard
   `http://cars-master:3000`)

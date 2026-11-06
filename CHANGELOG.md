@@ -5,6 +5,6 @@
 - Add `CarsBffRuntime`, an HTTP server with `GET /api/hello` and
   `GET /health`, and `start()`
 - Add `masterSource()`: the lines of `cars-master-runtime` over HTTP at
-  `MASTER_URL`
+  `MASTER_URL`, waiting at most `masterTimeoutMs`
 - Add the Dockerfile of the container `cars-bff`
 - Keep the package private, off npm

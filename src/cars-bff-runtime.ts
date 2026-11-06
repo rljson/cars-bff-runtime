@@ -17,20 +17,27 @@ export type HelloSource = () => Promise<string[]>;
 /** The line shown when cars-master-runtime does not answer */
 export const noMaster = 'No answer from cars-master-runtime';
 
+/** How long masterSource() waits for cars-master-runtime, in milliseconds */
+export const masterTimeoutMs = 2000;
+
 /**
  * Asks cars-master-runtime over HTTP for its hello lines
  * @param masterUrl - The base url of cars-master-runtime
  * @param fetchFn - The fetch to use
+ * @param timeoutMs - How long to wait for the answer
  * @returns A hello source that answers the lines of `GET <masterUrl>/api/hello`,
- *   or {@link noMaster} when there is no answer
+ *   or {@link noMaster} when there is no answer in time
  */
 export function masterSource(
   masterUrl: string,
   fetchFn: typeof fetch = fetch,
+  timeoutMs: number = masterTimeoutMs,
 ): HelloSource {
   return async () => {
     try {
-      const res = await fetchFn(`${masterUrl}/api/hello`);
+      const res = await fetchFn(`${masterUrl}/api/hello`, {
+        signal: AbortSignal.timeout(timeoutMs),
+      });
       if (!res.ok) return [noMaster];
       const { lines } = (await res.json()) as { lines: string[] };
       return lines;

@@ -44,7 +44,8 @@ found in the LICENSE file in the root of this package.
   - every other request answers 404
 - A hello source is an async function that returns lines
 - `masterSource(url)` fetches `GET <url>/api/hello` from
-  `cars-master-runtime`; without an answer it returns
+  `cars-master-runtime`; without an answer within `masterTimeoutMs`
+  (2 seconds) it returns
   `No answer from cars-master-runtime`, so the page never breaks
 - `start()` reads `PORT` (default 3000) and `MASTER_URL` (default
   `http://cars-master:3000`)

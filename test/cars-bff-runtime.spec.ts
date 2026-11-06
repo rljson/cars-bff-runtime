@@ -4,7 +4,7 @@
 // Use of this source code is governed by terms that can be
 // found in the LICENSE file in the root of this package.
 
-import { Server } from 'node:http';
+import { createServer, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -12,6 +12,7 @@ import {
   bffHello,
   CarsBffRuntime,
   masterSource,
+  masterTimeoutMs,
   noMaster,
 } from '../src/cars-bff-runtime';
 
@@ -116,6 +117,30 @@ describe('CarsBffRuntime', () => {
         throw new Error('down');
       }) as never;
       expect(await masterSource('http://m', fetchFn)()).toEqual([noMaster]);
+    });
+
+    it('answers noMaster when master does not answer in time', async () => {
+      const silent = createServer(() => undefined);
+      await new Promise<void>((resolve) => silent.listen(0, resolve));
+      const { port } = silent.address() as AddressInfo;
+      try {
+        const source = masterSource(`http://localhost:${port}`, fetch, 50);
+        expect(await source()).toEqual([noMaster]);
+      } finally {
+        silent.closeAllConnections();
+        silent.close();
+      }
+    });
+
+    it('waits masterTimeoutMs by default', async () => {
+      const signals: AbortSignal[] = [];
+      const fetchFn = (async (_url: string, init: RequestInit) => {
+        signals.push(init.signal!);
+        return { ok: true, json: async () => ({ lines: [] }) };
+      }) as never;
+      await masterSource('http://m', fetchFn)();
+      expect(signals[0].aborted).toBe(false);
+      expect(masterTimeoutMs).toBe(2000);
     });
 
     it('uses the global fetch by default', async () => {
